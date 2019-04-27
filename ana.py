@@ -26,23 +26,29 @@ def get_word_frequency(row):
 with open(compare_path, 'r', encoding="utf8") as f:
     compare_list = f.readlines()
     for word in compare_list:
+        word = word.replace('\n', '')
         compare_dict[word] = True
+
+# print(compare_dict.keys())
 
 # df = pd.read_excel(excel_path)
 xl = pd.ExcelFile(excel_path)
 sheet_list = xl.sheet_names  # see all sheet names
 
 # target is 1 and 3
-df = xl.parse(sheet_list[3])
+target_sheet_index = [1, 3]
+for sheet_index in target_sheet_index:
+    sheet_name = sheet_list[sheet_index]
+    df = xl.parse(sheet_name)
 
-# print(df.columns)
-# row = df.iloc[1]
+    # print(df.columns)
+    # row = df.iloc[1]
 
-for idx, row in tqdm(df.iterrows()):
-    get_word_frequency(row)
+    for idx, row in tqdm(df.iterrows()):
+        get_word_frequency(row)
 
-with open('word_freq.csv', 'w') as f:
-    w = csv.writer(f)
-    w.writerows(output)
+    with open('word_freq_{}.csv'.format(sheet_name), 'w') as f:
+        w = csv.writer(f)
+        w.writerows(output)
 
 
