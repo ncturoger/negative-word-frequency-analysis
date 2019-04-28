@@ -9,19 +9,22 @@ import csv
 excel_path = "58318_軍機繞台資料(四組)_190304.xlsx"
 compare_path = "58279_NTUSD_negative_utf8.txt"
 compare_dict = dict()
-output=[["負面詞頻"]]
+output=[["斷詞內容", "負面詞頻"]]
 
 
 def get_word_frequency(row):
     content = row['內容']
     count = 0
+    jieba_list = []
     if content and type(content) == str:
         seg_list = jieba.cut(content, cut_all=False)
         for word in seg_list:
+            jieba_list.append(word)
             if compare_dict.get(word):
                 count += 1
+        content = '/'.join(jieba_list)
 
-    output.append([count])
+    output.append([content, count])
 
 with open(compare_path, 'r', encoding="utf8") as f:
     compare_list = f.readlines()
